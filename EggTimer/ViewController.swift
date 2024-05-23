@@ -10,25 +10,24 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    let softTime = 5
-    let mediumTime = 7
-    let hardTime = 12
+    let eggTimes = [
+        "Soft": 300, "Medium": 420, "Hard": 720
+    ]
+    
+    var secondsRemaining = 60
 
     @IBAction func pressEgg(_ sender: UIButton) {
-        let hardness = sender.currentTitle
-        switch hardness {
-        case "Soft":
-            cookEgg(eggTime: softTime)
-        case "Medium":
-            cookEgg(eggTime: mediumTime)
-        case "Hard":
-            cookEgg(eggTime: hardTime)
-        default:
-            print("Error")
-        }
-    }
+        let hardness = sender.currentTitle!
+        secondsRemaining = eggTimes[hardness]!
+        
+        Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+            }
     
-    func cookEgg(eggTime: Int){
-        print(eggTime)
+    @objc func updateTimer() {
+        if secondsRemaining > 0 {
+            print("\(secondsRemaining) seconds until your egg is done.")
+            secondsRemaining -= 1
+        }
+        
     }
 }
