@@ -11,12 +11,19 @@ import UIKit
 class ViewController: UIViewController {
     
     let eggTimes = [
-        "Soft": 300, "Medium": 420, "Hard": 720
+        "Soft": 3, "Medium": 4, "Hard": 7
     ]
     
     var secondsRemaining = 60
+    
+    var timer = Timer()
 
+    @IBOutlet weak var timerLabel: UILabel!
+    
     @IBAction func pressEgg(_ sender: UIButton) {
+        timer.invalidate()
+        timerLabel.text = "Egg cooking!"
+        
         let hardness = sender.currentTitle!
         secondsRemaining = eggTimes[hardness]!
         
@@ -28,6 +35,9 @@ class ViewController: UIViewController {
             print("\(secondsRemaining) seconds until your egg is done.")
             secondsRemaining -= 1
         }
-        
+        if secondsRemaining == 0 {
+            timer.invalidate()
+            timerLabel.text = "Done!!!"
+        }
     }
 }
