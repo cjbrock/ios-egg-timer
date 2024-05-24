@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
     
@@ -14,30 +15,47 @@ class ViewController: UIViewController {
         "Soft": 3, "Medium": 4, "Hard": 7
     ]
     
-    var secondsRemaining = 60
+    var totalTime = 0
+    var secondsPassed = 0
     
     var timer = Timer()
+    var player: AVAudioPlayer!
 
     @IBOutlet weak var timerLabel: UILabel!
+    @IBOutlet weak var progressBar: UIProgressView!
     
     @IBAction func pressEgg(_ sender: UIButton) {
+    
         timer.invalidate()
-        timerLabel.text = "Egg cooking!"
-        
         let hardness = sender.currentTitle!
-        secondsRemaining = eggTimes[hardness]!
+        totalTime = eggTimes[hardness]!
+        
+        timerLabel.text = "\(hardness) egg cooking!"
+        
+        progressBar.progress = 0.0
+        secondsPassed = 0
         
         Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
             }
     
     @objc func updateTimer() {
-        if secondsRemaining > 0 {
-            print("\(secondsRemaining) seconds until your egg is done.")
-            secondsRemaining -= 1
-        }
-        if secondsRemaining == 0 {
+        if secondsPassed < totalTime {
+            
+            secondsPassed += 1
+            progressBar.progress = Float(secondsPassed) / Float(totalTime)
+            
+     
+        } else  {
             timer.invalidate()
             timerLabel.text = "Done!!!"
+            playSound()
         }
+    }
+    
+    func playSound() {
+        let url = Bundle.main.url(forResource: "alarm_sound", withExtension: "mp3")
+        player = try! AVAudioPlayer(contentsOf: url!)
+        player.play()
+                
     }
 }
